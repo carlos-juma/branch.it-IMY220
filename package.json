@@ -1,0 +1,43 @@
+{
+  "name": "imy220-project",
+  "version": "1.0.0",
+  "description": "Version control system.",
+  "main": "frontend/src/index.js",
+  "scripts": {
+    "build": "babel backend/server.js -d dist",
+    "start": "npm run build && node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlos-juma/branch.it-IMY220.git"
+  },
+  "author": "Carlos Juma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carlos-juma/branch.it-IMY220/issues"
+  },
+  "homepage": "https://github.com/carlos-juma/branch.it-IMY220#readme",
+  "dependencies": {
+    "css-loader": "^7.1.2",
+    "express": "^5.1.0",
+    "path": "^0.12.7",
+    "postcss-loader": "^8.2.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "style-loader": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@tailwindcss/postcss": "^4.1.13",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
