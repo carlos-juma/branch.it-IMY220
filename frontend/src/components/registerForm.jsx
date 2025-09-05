@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function RegisterForm() {
   const [name, setName] = useState("");
@@ -7,6 +8,9 @@ export function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+  const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,10 +22,22 @@ export function RegisterForm() {
       return;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    console.log("Registration attempt:", { name, email, password });
-    setIsLoading(false);
+    try {
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+      setResult(data);
+      setError(null);
+    } catch (err) {
+      setError(String(err));
+      setResult(null);
+    } finally {
+      setIsLoading(false);
+      nav("/home");
+    }
   };
 
   return (
@@ -98,6 +114,15 @@ export function RegisterForm() {
             {isLoading ? "Creating account..." : "Create Account"}
           </button>
         </form>
+
+        {result && (
+          <pre className="mt-4 p-3 bg-white/70 rounded text-xs overflow-auto">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        )}
+        {error && (
+          <div className="mt-2 text-red-600 text-sm">{error}</div>
+        )}
 
         <div className="text-center">
           <div className="text-sm text-muted-foreground">

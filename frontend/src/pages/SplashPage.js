@@ -1,5 +1,6 @@
 import React from "react";
 import backgroundImage from "../../public/assets/images/background.svg";
+import { Link } from "react-router-dom";
 
 export default function SplashPage() {
   return (
@@ -19,12 +20,24 @@ export default function SplashPage() {
       }}
       className="flex flex-row items-center justify-start"
     >
-      <div className="w-full h-full">
-        <p className=" font-bebas font-bold text-white text-4xl">SplashPage</p>
+      <div className="w-full h-full flex flex-col ml-14">
+        <span className="text-[#303539] font-bebas text-[120px] font-extrabold">
+          BRANCH.IT
+          <p className="text-white font-bebas text-[120px] font-extrabold py-0">
+            ORGANISE CHAOS.
+          </p>
+        </span>
 
-        <button className="border border-black bg-black rounded-md text-white font-bold p-2 m-2 text-6xl">
-          Get Started
-        </button>
+        <Link to="/login">
+          <button className="border border-[#303539] bg-[#303539] rounded-md text-white font-bold p-2 m-2 text-6xl">
+            Login
+          </button>
+        </Link>
+        <Link to="/register">
+          <button className="border border-[#303539] bg-[#303539] rounded-md text-white font-bold p-2 m-2 text-6xl">
+            Register
+          </button>
+        </Link>
       </div>
       <div className="w-full h-full"></div>
     </div>

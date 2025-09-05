@@ -7,6 +7,9 @@ import Header from "./components/header";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
+import ProfilePage from "./pages/ProfilePage";
+import Layout from "./components/Layout";
+import ProjectPage from "./pages/ProjectPage";
 
 function App() {
   return (
@@ -15,9 +18,12 @@ function App() {
         <Route path="/" element={<SplashPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-      </Routes>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
+
+        <Route element={<Layout />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

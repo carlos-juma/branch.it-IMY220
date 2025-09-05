@@ -1,20 +1,35 @@
 import React from "react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-
+  const [result, setResult] = useState(null)
+  const [error, setError] = useState(null)
+  const nav = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    console.log("Login attempt:", { email, password })
-    setIsLoading(false)
+    try {
+      const res = await fetch("/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await res.json()
+      setResult(data)
+      setError(null)
+    } catch (err) {
+      setError(String(err))
+      setResult(null)
+    } finally {
+      setIsLoading(false)
+      nav("/home")
+    }
   }
 
   return (
@@ -63,6 +78,15 @@ export function LoginForm() {
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        {result && (
+          <pre className="mt-4 p-3 bg-white/70 rounded text-xs overflow-auto">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        )}
+        {error && (
+          <div className="mt-2 text-red-600 text-sm">{error}</div>
+        )}
 
         <div className="text-center space-y-4">
           <label className="text-sm text-accent hover:text-accent/80 transition-colors">
