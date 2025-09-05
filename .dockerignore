@@ -1,0 +1,9 @@
+node_modules
+dist
+frontend/public/bundle.js
+.git
+.gitignore
+npm-debug.log
+Dockerfile
+docker-compose.yml
+.vscode

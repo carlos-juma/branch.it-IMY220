@@ -4,7 +4,7 @@
   "description": "Version control system.",
   "main": "frontend/src/index.js",
   "scripts": {
-    "build": "babel backend/server.js -d dist",
+    "build": "babel backend/server.js -d dist && npx webpack",
     "start": "npm run build && node dist/server.js"
   },
   "repository": {

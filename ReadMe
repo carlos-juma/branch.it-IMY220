@@ -1,0 +1,5 @@
+npm i
+
+docker build -t d1-image .
+
+docker run d1-image -p 3000:1337 --name newContainer
