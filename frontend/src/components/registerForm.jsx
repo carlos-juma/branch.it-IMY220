@@ -23,20 +23,29 @@ export function RegisterForm() {
     }
 
     try {
-      const res = await fetch("/signup", {
+      const res = await fetch("/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
-      setResult(data);
-      setError(null);
+      
+      if (res.ok && data.token) {
+        // Store JWT token in localStorage
+        localStorage.setItem('authToken', data.token)
+        localStorage.setItem('userData', JSON.stringify(data.user))
+        setResult(data);
+        setError(null);
+        nav("/home");
+      } else {
+        setError(data.message || 'Registration failed');
+        setResult(null);
+      }
     } catch (err) {
       setError(String(err));
       setResult(null);
     } finally {
       setIsLoading(false);
-      nav("/home");
     }
   };
 
