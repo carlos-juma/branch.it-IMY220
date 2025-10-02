@@ -4,7 +4,7 @@
   "description": "Version control system.",
   "main": "frontend/src/index.js",
   "scripts": {
-    "build": "babel backend/server.js -d dist && npx webpack",
+    "build": "babel backend -d dist && npx webpack",
     "start": "npm run build && node dist/server.js"
   },
   "repository": {
@@ -18,8 +18,13 @@
   },
   "homepage": "https://github.com/carlos-juma/branch.it-IMY220#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "css-loader": "^7.1.2",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.18.3",
     "path": "^0.12.7",
     "postcss-loader": "^8.2.0",
     "react": "^19.1.1",
