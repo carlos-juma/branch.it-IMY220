@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-async function run (){mongoose.connect(process.env.MONGO_URI || "mongodb+srv://u22602047:eAq1ChbA1nblS1NY@branchit.ugzr4l4.mongodb.net/branchITdb?retryWrites=true&w=majority&appName=branchIT",{
+async function run (){mongoose.connect(process.env.MONGO_URI,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
