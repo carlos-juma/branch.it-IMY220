@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { authUtils, API_ENDPOINTS } from "../utils/auth";
 import CollaborationManager from "../components/project/CollaborationManager";
+import UserAvatar from "../components/UserAvatar";
 
 const ProjectPage = () => {
   const { id } = useParams();
@@ -14,6 +15,11 @@ const ProjectPage = () => {
   const [selectedBranch, setSelectedBranch] = useState('main');
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [uploadData, setUploadData] = useState({ filename: '', content: '' });
+  const [showCollaborationManager, setShowCollaborationManager] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const navigate = useNavigate();
 
   const currentUser = authUtils.getUser();
   const isOwner = project && currentUser && (project.ownerId._id === currentUser.id || project.ownerId.id === currentUser.id);
@@ -109,6 +115,23 @@ const ProjectPage = () => {
     }
   };
 
+  const handleDeleteProject = async () => {
+    try {
+      setIsDeleting(true);
+      await authUtils.apiCall(API_ENDPOINTS.DELETE_PROJECT(id), {
+        method: 'DELETE'
+      });
+      
+      alert('Project deleted successfully!');
+      navigate('/projects'); // Navigate to projects page after deletion
+    } catch (error) {
+      alert('Failed to delete project: ' + error.message);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -167,7 +190,7 @@ const ProjectPage = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="bg-white rounded-lg border border-gray-200 mb-6">
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-6 ">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
@@ -212,12 +235,30 @@ const ProjectPage = () => {
                 </div>
                 
                 {hasAccess && (
-                  <button
-                    onClick={() => setShowUploadForm(true)}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    + Add file
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setShowUploadForm(true)}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      + Add file
+                    </button>
+                    {isOwner && (
+                      <>
+                        <button
+                          onClick={() => setShowCollaborationManager(true)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                           Manage Team
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(true)}
+                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                           Delete Project
+                        </button>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -272,10 +313,9 @@ const ProjectPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main Content - Files */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-lg border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+              <div className="px-6 py-4">
                 <h2 className="text-lg font-semibold text-gray-900">Project files</h2>
               </div>
               
@@ -307,7 +347,7 @@ const ProjectPage = () => {
                 </div>
               ) : (
                 <div className="px-6 py-12 text-center">
-                  <div className="text-4xl mb-4">📁</div>
+                  <div className="text-4xl mb-4"></div>
                   <p className="text-gray-500">No files in this project yet.</p>
                   {hasAccess && (
                     <button
@@ -322,9 +362,7 @@ const ProjectPage = () => {
             </div>
           </div>
 
-          {/* Sidebar - Contributors & Stats */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Collaboration Manager - Only for owners */}
             {isOwner && (
               <CollaborationManager 
                 project={project} 
@@ -332,18 +370,17 @@ const ProjectPage = () => {
               />
             )}
 
-            {/* Contributors */}
             <div className="bg-white rounded-lg border border-gray-200">
-              <div className="px-4 py-3 border-b border-gray-200">
+              <div className="px-4 py-3">
                 <h3 className="text-sm font-semibold text-gray-900">Contributors</h3>
               </div>
               <div className="p-4 space-y-3">
                 {contributors.map((contributor) => (
                   <div key={contributor.id} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                        {contributor.name.charAt(0).toUpperCase()}
-                      </div>
+                      <UserAvatar 
+                        user={contributor}
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">{contributor.name}</p>
                         <p className="text-xs text-gray-500">{contributor.role}</p>
@@ -355,7 +392,6 @@ const ProjectPage = () => {
               </div>
             </div>
 
-            {/* Project Statistics */}
             <div className="bg-white rounded-lg border border-gray-200">
               <div className="p-4 space-y-4">
                 <div className="flex items-center justify-center">
@@ -384,6 +420,53 @@ const ProjectPage = () => {
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Delete Project</h3>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete "<strong>{project?.name}</strong>"? This action cannot be undone. 
+              All files, commits, and project data will be permanently removed.
+            </p>
+            
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteProject}
+                disabled={isDeleting}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 flex items-center justify-center"
+              >
+                {isDeleting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Project'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -47,10 +47,9 @@ const ProjectsPage = () => {
 
   return (
     <main className="p-6 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Projects</h1>
+      <div className="flex flex-col justify-between mb-6">
+        <h1 className="text-3xl font-bold mb-6">Projects</h1>
         
-        {/* Filter buttons */}
         <div className="flex space-x-2">
           <button
             onClick={() => setFilter('all')}

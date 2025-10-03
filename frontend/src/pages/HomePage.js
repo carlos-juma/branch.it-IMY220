@@ -21,11 +21,9 @@ const HomePage = () => {
     try {
       setLoading(true);
       
-      // Fetch projects for feed
       const projectsData = await authUtils.apiCall(API_ENDPOINTS.GET_PROJECTS);
       setProjects(projectsData.slice(0, 10)); // Show first 10 projects
       
-      // Fetch friends list
       const friendsData = await authUtils.apiCall(API_ENDPOINTS.GET_FRIENDS);
       setFriends(friendsData);
       

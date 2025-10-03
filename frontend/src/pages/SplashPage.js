@@ -27,15 +27,9 @@ export default function SplashPage() {
             ORGANISE CHAOS.
           </p>
         </span>
-
         <Link to="/login">
-          <button className="border border-[#303539] bg-[#303539] rounded-md text-white font-bold p-2 m-2 text-6xl">
-            Login
-          </button>
-        </Link>
-        <Link to="/register">
-          <button className="border border-[#303539] bg-[#303539] rounded-md text-white font-bold p-2 m-2 text-6xl">
-            Register
+          <button className="border border-[#303539] bg-[#303539] rounded-md text-white font-bold p-2 m-2 text-6xl hover:">
+            Get Started →
           </button>
         </Link>
       </div>

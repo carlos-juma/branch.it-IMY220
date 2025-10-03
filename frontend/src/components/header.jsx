@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import UserAvatar from "./UserAvatar";
 import { authUtils, API_ENDPOINTS } from "../utils/auth";
 
 function Header() {
@@ -51,20 +52,12 @@ function Header() {
           </button>
           {user && (
             <div className="flex items-center space-x-2">
-              {/* Notifications Button */}
-              <a href="/notifications" className="relative">
-                <button className="bg-gray-200 hover:bg-gray-300 text-black rounded-full p-2 text-sm">
-                  🔔
-                  {pendingRequests > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {pendingRequests}
-                    </span>
-                  )}
-                </button>
-              </a>
               <span className="text-sm font-medium">{user.name}</span>
               <a href={`/profile/${user.id}`} className="cursor-pointer">
-                <button className="bg-black border rounded-full w-10 h-10"></button>
+                <UserAvatar 
+                  user={user} 
+                  size="w-10 h-10"
+                />
               </a>
               <button 
                 onClick={handleLogout}

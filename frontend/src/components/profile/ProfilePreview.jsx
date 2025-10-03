@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import UserAvatar from "../UserAvatar";
 
 const ProfilePreview = ({ user }) => {
   return (
     <div className="flex items-center bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-      {/* Avatar */}
-      <img
-        src={user.avatar}
-        alt={user.name}
-        className="w-12 h-12 rounded-full object-cover mr-4"
+      <UserAvatar
+        user={user}
+        size="w-12 h-12"
+        className="mr-4"
       />
 
-      {/* Info */}
       <div>
         <Link
           to={`/profile/${user.id}`}

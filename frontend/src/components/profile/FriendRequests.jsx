@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import UserAvatar from '../UserAvatar';
 import { authUtils, API_ENDPOINTS } from '../../utils/auth';
 
 const FriendRequests = ({ onRequestChange }) => {
@@ -86,10 +87,10 @@ const FriendRequests = ({ onRequestChange }) => {
           {requests.map((request) => (
             <div key={request._id} className="border rounded-lg p-3 flex items-center justify-between">
               <div className="flex items-center">
-                <img
-                  src={request.requesterId.avatar || '/assets/images/default-avatar.png'}
-                  alt={request.requesterId.name}
-                  className="w-10 h-10 rounded-full object-cover mr-3"
+                <UserAvatar
+                  user={request.requesterId}
+                  size="w-10 h-10"
+                  className="mr-3"
                 />
                 <div>
                   <p className="font-medium">{request.requesterId.name}</p>
@@ -100,7 +101,7 @@ const FriendRequests = ({ onRequestChange }) => {
                 </div>
               </div>
               
-              <div className="flex space-x-2">
+              <div className="flex flex-col space-y-2 ml-2">
                 <button
                   onClick={() => handleAcceptRequest(request._id)}
                   disabled={actionLoading[request._id]}

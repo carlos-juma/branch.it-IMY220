@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProjectPreview from "../project/ProjectPreview";
+import UserAvatar from "../UserAvatar";
 import { authUtils, API_ENDPOINTS } from "../../utils/auth";
 
 const Feed = ({ projects }) => {
@@ -14,12 +15,10 @@ const Feed = ({ projects }) => {
   const fetchActivityFeed = async () => {
     try {
       setLoading(true);
-      // Try to fetch personal activity feed
       const activityData = await authUtils.apiCall(API_ENDPOINTS.GET_PERSONAL_FEED);
       setActivities(activityData || []);
     } catch (error) {
       console.error('Error fetching activity feed:', error);
-      // Fall back to showing projects if activity feed fails
       setActivities([]);
     } finally {
       setLoading(false);
@@ -32,10 +31,9 @@ const Feed = ({ projects }) => {
         return (
           <div key={activity.data._id} className="p-4 bg-white shadow rounded-lg">
             <div className="flex items-center mb-2">
-              <img 
-                src={activity.user.avatar || '/assets/images/default-avatar.png'} 
-                alt={activity.user.name} 
-                className="w-8 h-8 rounded-full mr-2"
+              <UserAvatar 
+                user={activity.user} 
+                className="mr-2"
               />
               <div>
                 <span className="font-medium">{activity.user.name}</span>
@@ -54,10 +52,9 @@ const Feed = ({ projects }) => {
         return (
           <div key={activity.data._id} className="p-4 bg-white shadow rounded-lg">
             <div className="flex items-center mb-2">
-              <img 
-                src={activity.user.avatar || '/assets/images/default-avatar.png'} 
-                alt={activity.user.name} 
-                className="w-8 h-8 rounded-full mr-2"
+              <UserAvatar 
+                user={activity.user} 
+                className="mr-2"
               />
               <div>
                 <span className="font-medium">{activity.user.name}</span>
